@@ -8,9 +8,17 @@ import (
 	"github.com/bruhyan/linkpls/internal/service"
 )
 
-var linkService *service.LinkService
+type LinkHandler struct {
+	service *service.LinkService
+}
 
-func CreateShortLinkHandler(w http.ResponseWriter, r *http.Request) {
+func NewLinkHandler(service *service.LinkService) *LinkHandler {
+	return &LinkHandler{
+		service: service,
+	}
+}
+
+func (h *LinkHandler) CreateShortLinkHandler(w http.ResponseWriter, r *http.Request) {
 	var payload struct {
 		URL string `json:"url"`
 	}
@@ -23,7 +31,7 @@ func CreateShortLinkHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Received URL:", payload.URL)
 
-	shortLink, err := linkService.CreateShortLink(payload.URL)
+	shortLink, err := h.service.CreateShortLink(payload.URL)
 	if err != nil {
 		http.Error(w, "Failed to create short link", http.StatusInternalServerError)
 		return
