@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/bruhyan/linkpls/internal/database"
 	"github.com/bruhyan/linkpls/internal/handlers"
@@ -15,7 +16,12 @@ import (
 func main() {
 	PORT := "8080"
 	mux := http.NewServeMux()
-	redisClient := database.New("localhost:6379", "", 0, 0)
+
+	redisAddr := os.Getenv("REDIS_ADDR")
+	if redisAddr == "" {
+		redisAddr = "localhost:6379"
+	}
+	redisClient := database.New(redisAddr, "", 0, 0)
 
 	if err := redisClient.Ping(context.Background()); err != nil {
 		log.Fatal("Failed to connect to Redis:", err)
