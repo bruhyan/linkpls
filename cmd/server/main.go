@@ -14,5 +14,5 @@ func main() {
 	routes.Setup(mux)
 
 	fmt.Println("linkpls server running on port", PORT)
-	log.Fatal(http.ListenAndServe(":"+PORT, nil))
+	log.Fatal(http.ListenAndServe(":"+PORT, mux))
 }
